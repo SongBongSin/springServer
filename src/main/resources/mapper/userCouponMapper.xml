@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.test.springServer.mappers.userCouponMapper">
+ 
+ 	<select id="couponC" parameterType="com.test.springServer.model.UserCoupon"  resultType="int">
+        SELECT count(cp_code) FROM myapp_user_coupon where cp_code = #{cp_code}
+    </select>
+    
+    <select id="allList"  resultType="com.test.springServer.model.UserCoupon">
+        SELECT * FROM myapp_user_coupon
+    </select>
+    
+    <select id="couponCode" parameterType="com.test.springServer.model.UserCoupon"  resultType="String">
+        SELECT cp_code FROM myapp_user_coupon where phone_num = #{phone_num}
+    </select>
+    
+    <insert id="insert" parameterType="com.test.springServer.model.UserCoupon">
+         INSERT INTO myapp_user_coupon(phone_num , cp_code , in_ymdh) 
+         SELECT * FROM (SELECT #{phone_num} , #{cp_code} , now()) AS tmp
+			WHERE NOT EXISTS (
+			    SELECT phone_num FROM myapp_user_coupon WHERE phone_num = #{phone_num}
+			) LIMIT 1;
+    </insert>
+    
+</mapper>
